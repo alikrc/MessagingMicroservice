@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  sqldata:
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "6433:1433"
+    volumes:
+      - app-sqldata:/var/opt/mssql
+
+  identity-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MessagingApiClient=http://${EXTERNAL_DNS_NAME_OR_IP}:6100
+      - ConnectionString=Server=sqldata;Database=IdentityDb;User Id=sa;Password=Pass@word
+    ports:
+      - "6105:80"
+
+  messaging.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:6105
+      - PATH_BASE=/messaging-api
+      - ConnectionString=Server=sqldata;Database=MessagingDb;User Id=sa;Password=Pass@word
+    ports:
+      - "6100:80"
+      
+volumes:
+  app-sqldata:
+    external: false

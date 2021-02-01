@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+
+  sqldata:
+    image: mcr.microsoft.com/mssql/server:2017-latest 
+
+  identity-api:
+    image: ${DOCKER_REGISTRY-}identityapi
+    build:
+      context: .
+      dockerfile: Services/Identity/IdentityServer/Dockerfile
+    depends_on:
+      - sqldata
+
+  messaging.api:
+    image: ${DOCKER_REGISTRY-}messagingapi
+    build:
+      context: .
+      dockerfile: Services/Messaging/Messaging.API/Dockerfile
+    depends_on:
+      - sqldata
+
