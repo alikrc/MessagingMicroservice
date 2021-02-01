@@ -28,7 +28,7 @@ namespace Messaging.API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    UserName = table.Column<string>(nullable: false)
+                    UserName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

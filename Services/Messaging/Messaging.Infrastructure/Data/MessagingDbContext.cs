@@ -60,8 +60,7 @@ namespace Messaging.Infrastructure.Data
                  .ValueGeneratedNever()
                  .IsRequired();
 
-                entity.Property(e => e.UserName)
-                 .IsRequired();
+                entity.Property(e => e.UserName);
 
                 entity.HasMany(e => e.UsersBlockedByUser)
                     .WithOne(e => e.BlockingUser)

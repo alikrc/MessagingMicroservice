@@ -6,10 +6,10 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["ApiGateway/WebBffAggregator/WebBffAggregator.csproj", "ApiGateway/WebBffAggregator/"]
-RUN dotnet restore "ApiGateway/WebBffAggregator/WebBffAggregator.csproj"
+COPY ["ApiGateways/WebBffAggregator/WebBffAggregator.csproj", "ApiGateways/WebBffAggregator/"]
+RUN dotnet restore "ApiGateways/WebBffAggregator/WebBffAggregator.csproj"
 COPY . .
-WORKDIR "/src/ApiGateway/WebBffAggregator"
+WORKDIR "/src/ApiGateways/WebBffAggregator"
 RUN dotnet build "WebBffAggregator.csproj" -c Release -o /app/build
 
 FROM build AS publish

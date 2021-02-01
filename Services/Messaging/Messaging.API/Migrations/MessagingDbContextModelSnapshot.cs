@@ -68,7 +68,6 @@ namespace Messaging.API.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

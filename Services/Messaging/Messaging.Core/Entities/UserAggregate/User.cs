@@ -15,6 +15,11 @@ namespace Messaging.Core.Entities.UserAggregate
 
         public List<BlockedPeople> UsersBlockUser { get; set; }
 
+        public User(Guid id)
+        {
+            Id = Guid.Empty != id ? id : throw new MessagingDomainException(nameof(id));
+        }
+
         public User(Guid id, string userName)
         {
             Id = Guid.Empty != id ? id : throw new MessagingDomainException(nameof(id));

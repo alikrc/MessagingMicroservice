@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -30,40 +28,34 @@ namespace Messaging.API.Controllers
         }
 
         [HttpGet]
-        [Route("getMyMessages")]
+        [Route(nameof(GetMyMessages))]
         [ProducesResponseType(typeof(PaginatedItemsApiModel<MessageApiModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<MessageApiModel>> GetMyMessages([FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0)
         {
             var userId = _identityService.GetUserId();
 
-            var messages = await _messagingService.GetMessages(userId, pageIndex, pageSize);
+            var messages = await _messagingService.GetMyMessages(userId, pageIndex, pageSize);
 
             return Ok(messages);
         }
 
         [HttpPost]
-        [Route("blockUser")]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [Route(nameof(BlockUser))]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult> BlockUser([FromBody] BlockedUserApiModel blockedUserApiModel)
+        public async Task<ActionResult> BlockUser([FromQuery] Guid userIdtoBlock)
         {
-            throw new NotImplementedException();
+            await _userService.BlockUser(_identityService.GetUserId(), userIdtoBlock);
 
-            //TODO
-            //var receiverId =messageApiModel.rece
-
-            //var receiverId = Guid.Empty;
-            //var id = await _messagingService.CreateMessage(_identityService.GetUserId(), receiverId, createMessageApiModel.MessageText);
-
-            //return CreatedAtAction(nameof(GetMyMessages), new { id = id }, null);
+            return Ok();
         }
 
         [HttpPost]
-        [Route("sendMessage")]
+        [Route(nameof(SendMessage))]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult> CreateMessage([FromBody] CreateMessageApiModel createMessageApiModel)
+        public async Task<ActionResult> SendMessage([FromBody] CreateMessageApiModel createMessageApiModel)
         {
             //TODO
             //var receiverId =messageApiModel.rece

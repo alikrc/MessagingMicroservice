@@ -7,11 +7,6 @@ namespace Messaging.Infrastructure.Data.Repositories
     {
         public UserRepository(MessagingDbContext dbContext) : base(dbContext)
         {
-            //public void FindBlockedUser()
-            //{
-                
-
-            //}
         }
 
     }

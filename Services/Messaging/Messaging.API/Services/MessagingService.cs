@@ -40,7 +40,7 @@ namespace Messaging.API.Services
             return result.Id;
         }
 
-        public async Task<PaginatedItemsApiModel<MessageApiModel>> GetMessages(Guid userId, int pageIndex, int pageSize)
+        public async Task<PaginatedItemsApiModel<MessageApiModel>> GetMyMessages(Guid userId, int pageIndex, int pageSize)
         {
             Expression<Func<Message, bool>> criteria = w => w.ReceiverId == userId || w.SenderId == userId;
 

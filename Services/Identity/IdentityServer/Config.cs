@@ -31,13 +31,24 @@ namespace IdentityServer
                         JwtClaimTypes.PreferredUserName
                     }
                 },
+                new ApiResource(name:"webBffApiAud", displayName:"Web Bff API Service")
+                {
+                    Scopes = { "webBffApi.read", "webBffApi.write" },
+                    UserClaims = {
+                        JwtClaimTypes.Name,
+                        JwtClaimTypes.Subject,
+                        JwtClaimTypes.PreferredUserName
+                    }
+                },
             };
 
         public static IEnumerable<ApiScope> ApiScopes =>
             new List<ApiScope>
             {
                 new ApiScope(name: "messagingApi.read", displayName: "read Scope Access"),
-                new ApiScope(name: "messagingApi.write", displayName: "write Scope Access")
+                new ApiScope(name: "messagingApi.write", displayName: "write Scope Access"),
+                new ApiScope(name: "webBffApi.read", displayName: "read Scope Access"),
+                new ApiScope(name: "webBffApi.write", displayName: "write Scope Access")
             };
 
         public static IEnumerable<IdentityResource> IdentityResources =>
@@ -71,6 +82,26 @@ namespace IdentityServer
                         "messagingApi.write"
                     }
                 },
+                new Client
+                {
+                    ClientId = "webbffswaggerui",
+                    ClientName = "Web Bff Swagger UI",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowAccessTokensViaBrowser = true,
+                    AllowedCorsOrigins = { $"{Configuration.GetValue<string>("WebBffAggregatorApiClient")}" },
+
+                    RedirectUris = { $"{Configuration.GetValue<string>("WebBffAggregatorApiClient")}/swagger/oauth2-redirect.html" },
+                    PostLogoutRedirectUris = { $"{Configuration.GetValue<string>("WebBffAggregatorApiClient")}/swagger/" },
+
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
+                        "webBffApi.read",
+                        "webBffApi.write"
+                    }
+                }
             };
     }
 }

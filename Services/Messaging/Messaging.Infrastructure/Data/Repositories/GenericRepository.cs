@@ -28,6 +28,11 @@ namespace Messaging.Infrastructure.Data.Repositories
             var keyValues = new object[] { id };
             return await _dbSet.FindAsync(keyValues, cancellationToken);
         }
+        public virtual async Task<TEntity> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            var keyValues = new object[] { id };
+            return await _dbSet.FindAsync(keyValues, cancellationToken);
+        }
 
         public async Task<IReadOnlyList<TEntity>> ListAllAsync(CancellationToken cancellationToken = default)
         {

@@ -5,7 +5,10 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectGuid>f4dd1dc4-ec8f-4a02-8ea0-f4c6d5858078</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceName>messaging.api</DockerServiceName>
+    <DockerServiceName>webbffaggregator</DockerServiceName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DockerServiceUrl>http://host.docker.internal:7334</DockerServiceUrl>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">

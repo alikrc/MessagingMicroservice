@@ -52,6 +52,14 @@ namespace IdentityServerHost.Quickstart.UI
             _configuration = configuration;
         }
 
+        [HttpGet]
+        public async Task<string> GetUserIdByUserName(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+
+            return user?.Id;
+        }
+
         /// <summary>
         /// Entry point into the login workflow
         /// </summary>

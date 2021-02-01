@@ -7,18 +7,20 @@ using System.Threading.Tasks;
 
 namespace Messaging.Core.Interfaces
 {
-    public interface IRepository<T> where T : BaseEntity, IAggregateRoot
+    public interface IRepository<TEntity> where TEntity : BaseEntity, IAggregateRoot
     {
-        Task<T> GetByIdAsync(int id, CancellationToken cancellationToken = default);
-        Task<IReadOnlyList<T>> ListAllAsync(CancellationToken cancellationToken = default);
-        Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec, CancellationToken cancellationToken = default);
-        Task<T> AddAsync(T entity, CancellationToken cancellationToken = default);
-        Task UpdateAsync(T entity, CancellationToken cancellationToken = default);
-        Task DeleteAsync(T entity, CancellationToken cancellationToken = default);
-        Task<int> CountAsync(ISpecification<T> spec, CancellationToken cancellationToken = default);
-        Task<bool> AnyAsync(ISpecification<T> spec, CancellationToken cancellationToken = default);
-        Task<T> FirstAsync(ISpecification<T> spec, CancellationToken cancellationToken = default);
-        Task<T> FirstOrDefaultAsync(ISpecification<T> spec, CancellationToken cancellationToken = default);
+        Task<TEntity> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+        Task<TEntity> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<TEntity>> ListAllAsync(CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<TEntity>> ListAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default);
+        Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
+        Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
+        Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
+        Task<int> CountAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default);
+        Task<bool> AnyAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default);
+        Task<TEntity> FirstAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default);
+        Task<TEntity> FirstOrDefaultAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default);
+
         IUnitOfWork UnitOfWork { get; }
     }
 }

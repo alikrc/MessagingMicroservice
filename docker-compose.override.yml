@@ -14,6 +14,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - MessagingApiClient=http://${EXTERNAL_DNS_NAME_OR_IP}:6100
+      - WebBffAggregatorApiClient=http://${EXTERNAL_DNS_NAME_OR_IP}:7334
       - ConnectionString=Server=sqldata;Database=IdentityDb;User Id=sa;Password=Pass@word
     ports:
       - "6105:80"
@@ -26,7 +27,16 @@ services:
       - ConnectionString=Server=sqldata;Database=MessagingDb;User Id=sa;Password=Pass@word
     ports:
       - "6100:80"
-      
+
+  webbffaggregator:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:6105
+      - MessagingApiUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:6100
+      - PATH_BASE=/webbffaggregator
+    ports:
+      - "7334:80"
+
 volumes:
   app-sqldata:
     external: false

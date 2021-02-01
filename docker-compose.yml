@@ -21,3 +21,12 @@ services:
     depends_on:
       - sqldata
 
+  webbffaggregator:
+    image: ${DOCKER_REGISTRY-}webbffaggregator
+    build:
+      context: .
+      dockerfile: ApiGateway/WebBffAggregator/Dockerfile
+    depends_on:
+      - sqldata
+      - messaging.api
+      - identity-api
