@@ -4,6 +4,7 @@ services:
 
   sqldata:
     image: mcr.microsoft.com/mssql/server:2017-latest 
+    container_name: sqlServer   
 
   identity-api:
     image: ${DOCKER_REGISTRY-}identityapi

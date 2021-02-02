@@ -7,13 +7,13 @@ namespace Messaging.Core.Entities.UserAggregate
 {
     public class User : BaseEntity, IAggregateRoot
     {
-        public new Guid Id { get; private set; }
+        public Guid Id { get; private set; }
 
         public string UserName { get; private set; }
-        
-        public List<BlockedPeople> UsersBlockedByUser { get; set; }
 
-        public List<BlockedPeople> UsersBlockUser { get; set; }
+        public List<BlockedPeople> UsersBlockedByUser { get; private set; } = new List<BlockedPeople>();
+
+        public List<BlockedPeople> UsersBlockUser { get; private set; } = new List<BlockedPeople>();
 
         public User(Guid id)
         {

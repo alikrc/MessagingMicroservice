@@ -13,7 +13,7 @@ namespace Messaging.Infrastructure.Data
     public class MessagingDbContext : DbContext, IUnitOfWork
     {
         public DbSet<Message> Messages { get; set; }
-        public DbSet<BlockedPeople> BlockedUsers { get; set; }
+        public DbSet<BlockedPeople> BlockedPeople { get; set; }
         public DbSet<User> Users { get; set; }
 
         private IDbContextTransaction _currentTransaction;
@@ -32,13 +32,13 @@ namespace Messaging.Infrastructure.Data
             modelBuilder.Entity<Message>(entity =>
             {
                 entity.Property(b => b.SenderId)
-                 .IsRequired();
+                    .IsRequired();
 
                 entity.Property(b => b.ReceiverId)
-                 .IsRequired();
+                    .IsRequired();
 
                 entity.Property(b => b.MessageText)
-                 .IsRequired();
+                    .IsRequired();
 
             });
 
@@ -47,31 +47,30 @@ namespace Messaging.Infrastructure.Data
                 entity.HasKey(b => b.BlockingUserId);
 
                 entity.Property(b => b.BlockingUserId)
-                 .IsRequired();
+                    .IsRequired();
 
                 entity.Property(b => b.BlockedUserId)
-                 .IsRequired();
+                    .IsRequired();
+
+                entity.HasOne(w => w.BlockingUser)
+                    .WithMany(w => w.UsersBlockedByUser)
+                    .HasForeignKey(w => w.BlockingUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(w => w.BlockedUser)
+                    .WithMany(w => w.UsersBlockUser)
+                    .HasForeignKey(w => w.BlockedUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
             });
 
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.Id)
-                 .ValueGeneratedNever()
-                 .IsRequired();
+                    .ValueGeneratedNever()
+                    .IsRequired();
 
                 entity.Property(e => e.UserName);
-
-                entity.HasMany(e => e.UsersBlockedByUser)
-                    .WithOne(e => e.BlockingUser)
-                    .HasForeignKey(e => e.BlockingUserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasMany(e => e.UsersBlockUser)
-                    .WithOne(e => e.BlockedUser)
-                    .HasForeignKey(e => e.BlockedUserId)
-                    .HasForeignKey(e => e.BlockingUserId)
-                    .OnDelete(DeleteBehavior.Restrict);
             });
 
         }

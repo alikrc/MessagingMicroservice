@@ -22,18 +22,22 @@ namespace IdentityServer
         public static IEnumerable<ApiResource> ApiResources =>
             new List<ApiResource>
             {
-                new ApiResource(name:"messagingApiAud", displayName:"Messaging API Service")
+                new ApiResource(name:"messagingApi", displayName:"Messaging API Service")
                 {
-                    Scopes = { "messagingApi.read", "messagingApi.write" },
+                    Scopes = {
+                        "messagingApi.read",
+                    },
                     UserClaims = {
                         JwtClaimTypes.Name,
                         JwtClaimTypes.Subject,
                         JwtClaimTypes.PreferredUserName
                     }
                 },
-                new ApiResource(name:"webBffApiAud", displayName:"Web Bff API Service")
+                new ApiResource(name:"webBffApi", displayName:"Web Bff API Service")
                 {
-                    Scopes = { "webBffApi.read", "webBffApi.write" },
+                    Scopes = {
+                        "webBffApi.read",
+                    },
                     UserClaims = {
                         JwtClaimTypes.Name,
                         JwtClaimTypes.Subject,
@@ -45,10 +49,8 @@ namespace IdentityServer
         public static IEnumerable<ApiScope> ApiScopes =>
             new List<ApiScope>
             {
-                new ApiScope(name: "messagingApi.read", displayName: "read Scope Access"),
-                new ApiScope(name: "messagingApi.write", displayName: "write Scope Access"),
-                new ApiScope(name: "webBffApi.read", displayName: "read Scope Access"),
-                new ApiScope(name: "webBffApi.write", displayName: "write Scope Access")
+                new ApiScope(name: "webBffApi.read", displayName: "webBffApi Access"),
+                new ApiScope(name: "messagingApi.read", displayName: "messagingApi Access"),
             };
 
         public static IEnumerable<IdentityResource> IdentityResources =>
@@ -68,7 +70,6 @@ namespace IdentityServer
                     ClientName = "Messaging Swagger UI",
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
-                    AllowedCorsOrigins = { $"{Configuration.GetValue<string>("MessagingApiClient")}" },
 
                     RedirectUris = { $"{Configuration.GetValue<string>("MessagingApiClient")}/swagger/oauth2-redirect.html" },
                     PostLogoutRedirectUris = { $"{Configuration.GetValue<string>("MessagingApiClient")}/swagger/" },
@@ -78,8 +79,8 @@ namespace IdentityServer
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.OfflineAccess,
-                        "messagingApi.read",
-                        "messagingApi.write"
+                        "webBffApi.read",
+                        "messagingApi.read"
                     }
                 },
                 new Client
@@ -88,7 +89,6 @@ namespace IdentityServer
                     ClientName = "Web Bff Swagger UI",
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
-                    AllowedCorsOrigins = { $"{Configuration.GetValue<string>("WebBffAggregatorApiClient")}" },
 
                     RedirectUris = { $"{Configuration.GetValue<string>("WebBffAggregatorApiClient")}/swagger/oauth2-redirect.html" },
                     PostLogoutRedirectUris = { $"{Configuration.GetValue<string>("WebBffAggregatorApiClient")}/swagger/" },
@@ -99,7 +99,7 @@ namespace IdentityServer
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.OfflineAccess,
                         "webBffApi.read",
-                        "webBffApi.write"
+                        "messagingApi.read"
                     }
                 }
             };

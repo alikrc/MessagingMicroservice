@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Net;
 
 namespace WebBffAggregator.Filters
@@ -25,19 +26,35 @@ namespace WebBffAggregator.Filters
                 context.Exception,
                 context.Exception.Message);
 
-            var json = new JsonErrorResponse
+            if (context.Exception.GetType() == typeof(ArgumentNullException))
             {
-                Messages = new[] { "An error ocurred." }
-            };
+                var problemDetails = new ValidationProblemDetails()
+                {
+                    Instance = context.HttpContext.Request.Path,
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = "Please refer to the errors property for additional details."
+                };
 
-            if (_env.IsDevelopment())
-            {
-                json.DeveloperMessage = context.Exception;
+                problemDetails.Errors.Add(nameof(ArgumentNullException), new string[] { context.Exception.Message.ToString() });
+
+                context.Result = new BadRequestObjectResult(problemDetails);
+                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             }
+            else
+            {
+                var json = new JsonErrorResponse
+                {
+                    Messages = new[] { "An error ocurred." }
+                };
 
-            context.Result = new ObjectResult(json) { StatusCode = StatusCodes.Status500InternalServerError };
-            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                if (_env.IsDevelopment())
+                {
+                    json.DeveloperMessage = context.Exception;
+                }
 
+                context.Result = new ObjectResult(json) { StatusCode = StatusCodes.Status500InternalServerError };
+                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            }
             context.ExceptionHandled = true;
         }
 

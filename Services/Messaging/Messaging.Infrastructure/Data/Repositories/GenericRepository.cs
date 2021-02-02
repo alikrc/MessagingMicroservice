@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -54,6 +55,11 @@ namespace Messaging.Infrastructure.Data.Repositories
             return await ApplySpecification(spec).AnyAsync(cancellationToken);
         }
 
+        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken = default)
+        {
+            return await _dbSet.AnyAsync(expression);
+        }
+
         public async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             await _dbSet.AddAsync(entity);
@@ -68,7 +74,7 @@ namespace Messaging.Infrastructure.Data.Repositories
 
         public async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
-           _dbSet.Remove(entity);
+            _dbSet.Remove(entity);
         }
 
         public async Task<TEntity> FirstAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default)

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Messaging.API.Migrations
 {
     [DbContext(typeof(MessagingDbContext))]
-    [Migration("20210201053802_InitialCreate")]
+    [Migration("20210202030334_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,14 +54,11 @@ namespace Messaging.API.Migrations
                     b.Property<Guid>("BlockedUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("BlockingUserId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("BlockingUserId");
 
-                    b.HasIndex("BlockingUserId1");
+                    b.HasIndex("BlockedUserId");
 
-                    b.ToTable("BlockedUsers");
+                    b.ToTable("BlockedPeople");
                 });
 
             modelBuilder.Entity("Messaging.Core.Entities.UserAggregate.User", b =>
@@ -81,13 +78,15 @@ namespace Messaging.API.Migrations
                 {
                     b.HasOne("Messaging.Core.Entities.UserAggregate.User", "BlockedUser")
                         .WithMany("UsersBlockUser")
-                        .HasForeignKey("BlockingUserId")
+                        .HasForeignKey("BlockedUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Messaging.Core.Entities.UserAggregate.User", "BlockingUser")
                         .WithMany("UsersBlockedByUser")
-                        .HasForeignKey("BlockingUserId1");
+                        .HasForeignKey("BlockingUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

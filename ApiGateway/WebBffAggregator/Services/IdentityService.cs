@@ -36,10 +36,14 @@ namespace WebBffAggregator.Services
         public async Task<Guid?> GetUserIdByUsername(string username)
         {
             var responseString = await _httpClient.GetStringAsync(_remoteServiceBaseUrl + username);
-
-            //Guid.TryParse
-
-            return new Guid(responseString);
+            try
+            {
+                return new Guid(responseString);
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentNullException($"{nameof(username)} not found.");
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Messaging.Core.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,6 +18,7 @@ namespace Messaging.Core.Interfaces
         Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
         Task<int> CountAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default);
         Task<bool> AnyAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default);
+        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken = default);
         Task<TEntity> FirstAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default);
         Task<TEntity> FirstOrDefaultAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default);
 

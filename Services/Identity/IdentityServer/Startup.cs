@@ -91,6 +91,16 @@ namespace IdentityServer
             builder.AddDeveloperSigningCredential();
 
             services.AddAuthentication();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllCorsPolicy",
+                    builder => builder
+                    .SetIsOriginAllowed((host) => true)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
         }
 
         public void Configure(IApplicationBuilder app)
@@ -112,6 +122,8 @@ namespace IdentityServer
             {
                 endpoints.MapDefaultControllerRoute();
             });
+
+            app.UseCors("AllowAllCorsPolicy");
         }
     }
 }

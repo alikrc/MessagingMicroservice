@@ -75,8 +75,8 @@ namespace WebBffAggregator
                             TokenUrl = new Uri($"{identityServiceUrl}/connect/token"),
                             Scopes = new Dictionary<string, string>()
                             {
-                                { "webBffApi.read", "read Scope Access" },
-                                { "webBffApi.write", "write Scope Access" }
+                                { "webBffApi.read", "webBffApi Access" },
+                                { "messagingApi.read", "messagingApi Access" }
                             }
                         }
                     }
@@ -97,9 +97,13 @@ namespace WebBffAggregator
             {
                 options.Authority = Configuration.GetValue<string>("IdentityUrl");
                 options.RequireHttpsMetadata = false;
-                options.Audience = "webBffApiAud";
+                options.Audience = "webBffApi";
 
-                options.TokenValidationParameters = new TokenValidationParameters { ValidateIssuer = false };
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                };
             });
 
             services.AddCors(options =>
@@ -111,7 +115,6 @@ namespace WebBffAggregator
                     .AllowAnyHeader()
                     .AllowCredentials());
             });
-
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

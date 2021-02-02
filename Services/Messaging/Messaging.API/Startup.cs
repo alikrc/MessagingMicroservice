@@ -55,6 +55,24 @@ namespace Messaging.API
                 }));
 
 
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var problemDetails = new ValidationProblemDetails(context.ModelState)
+                    {
+                        Instance = context.HttpContext.Request.Path,
+                        Status = StatusCodes.Status400BadRequest,
+                        Detail = "Please refer to the errors property for additional details."
+                    };
+
+                    return new BadRequestObjectResult(problemDetails)
+                    {
+                        ContentTypes = { "application/problem+json", "application/problem+xml" }
+                    };
+                };
+            });
+
             var identityServiceUrl = Configuration.GetValue<string>("IdentityUrl");
             services.AddSwaggerGen(options =>
             {
@@ -77,32 +95,14 @@ namespace Messaging.API
                             TokenUrl = new Uri($"{identityServiceUrl}/connect/token"),
                             Scopes = new Dictionary<string, string>()
                             {
-                                { "messagingApi.read", "read Scope Access" },
-                                { "messagingApi.write", "write Scope Access" }
+                                { "webBffApi.read", "webBffApi Access" },
+                                { "messagingApi.read", "messagingApi Access" }
                             }
                         }
                     }
                 });
 
                 options.OperationFilter<AuthorizeCheckOperationFilter>();
-            });
-
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.InvalidModelStateResponseFactory = context =>
-                {
-                    var problemDetails = new ValidationProblemDetails(context.ModelState)
-                    {
-                        Instance = context.HttpContext.Request.Path,
-                        Status = StatusCodes.Status400BadRequest,
-                        Detail = "Please refer to the errors property for additional details."
-                    };
-
-                    return new BadRequestObjectResult(problemDetails)
-                    {
-                        ContentTypes = { "application/problem+json", "application/problem+xml" }
-                    };
-                };
             });
 
             //// prevent from mapping "sub" claim to nameidentifier.
@@ -117,9 +117,13 @@ namespace Messaging.API
             {
                 options.Authority = Configuration.GetValue<string>("IdentityUrl");
                 options.RequireHttpsMetadata = false;
-                options.Audience = "messagingApiAud";
+                options.Audience = "messagingApi";
 
-                options.TokenValidationParameters = new TokenValidationParameters { ValidateIssuer = false };
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                };
             });
 
             services.AddCors(options =>

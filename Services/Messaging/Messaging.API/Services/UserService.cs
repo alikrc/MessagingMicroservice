@@ -29,20 +29,30 @@ namespace Messaging.API.Services
         public async Task<bool> BlockUser(Guid blockingUserId, Guid userIdtoBlock)
         {
             var blockedPeople = new BlockedPeople(blockingUserId, userIdtoBlock);
-            var user = await _userRepository.GetByIdAsync(blockingUserId);
-            if (user == null)
+            var blockingUser = await _userRepository.GetByIdAsync(blockingUserId);
+            if (blockingUser == null)
             {
-                user = new User(blockingUserId);
+                blockingUser = new User(blockingUserId);
 
-                user.UsersBlockedByUser.Add(blockedPeople);
+                await _userRepository.AddAsync(blockingUser);
 
-                await _userRepository.AddAsync(user);
-
-                return await _userRepository.UnitOfWork.CommitAsync();
+                await _userRepository.UnitOfWork.CommitAsync();
             }
 
-            user.UsersBlockedByUser.Add(blockedPeople);
-            await _userRepository.UpdateAsync(user);
+            var isuserToBeBlockedExists = await _userRepository.AnyAsync(w => w.Id == userIdtoBlock);
+            if (isuserToBeBlockedExists == false)
+            {
+                var userToBeBlocked = new User(userIdtoBlock);
+
+                await _userRepository.AddAsync(userToBeBlocked);
+
+                await _userRepository.UnitOfWork.CommitAsync();
+            }
+
+            blockingUser.UsersBlockedByUser.Add(blockedPeople);
+
+            await _userRepository.UpdateAsync(blockingUser);
+
             return await _userRepository.UnitOfWork.CommitAsync();
         }
     }

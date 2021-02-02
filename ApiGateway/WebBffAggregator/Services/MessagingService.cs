@@ -26,7 +26,10 @@ namespace WebBffAggregator.Services
         {
             var uri = UrlsConfig.Messaging.BlockUser(_remoteServiceBaseUrl, userIdtoBlock);
 
-            await _httpClient.PostAsync(uri, null);
+            var response = await _httpClient.PostAsync(uri, null);
+
+            response.EnsureSuccessStatusCode();
+
         }
 
         public async Task<PaginatedItemsApiModel<MessageApiModel>> GetMyMessages(Guid userId, int pageIndex, int pageSize)

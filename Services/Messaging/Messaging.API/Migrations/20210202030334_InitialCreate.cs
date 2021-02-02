@@ -36,40 +36,39 @@ namespace Messaging.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BlockedUsers",
+                name: "BlockedPeople",
                 columns: table => new
                 {
                     BlockingUserId = table.Column<Guid>(nullable: false),
-                    BlockedUserId = table.Column<Guid>(nullable: false),
-                    BlockingUserId1 = table.Column<Guid>(nullable: true)
+                    BlockedUserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BlockedUsers", x => x.BlockingUserId);
+                    table.PrimaryKey("PK_BlockedPeople", x => x.BlockingUserId);
                     table.ForeignKey(
-                        name: "FK_BlockedUsers_Users_BlockingUserId",
-                        column: x => x.BlockingUserId,
+                        name: "FK_BlockedPeople_Users_BlockedUserId",
+                        column: x => x.BlockedUserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_BlockedUsers_Users_BlockingUserId1",
-                        column: x => x.BlockingUserId1,
+                        name: "FK_BlockedPeople_Users_BlockingUserId",
+                        column: x => x.BlockingUserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BlockedUsers_BlockingUserId1",
-                table: "BlockedUsers",
-                column: "BlockingUserId1");
+                name: "IX_BlockedPeople_BlockedUserId",
+                table: "BlockedPeople",
+                column: "BlockedUserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BlockedUsers");
+                name: "BlockedPeople");
 
             migrationBuilder.DropTable(
                 name: "Messages");
