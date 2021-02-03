@@ -6,7 +6,7 @@ Visual Studio: Ctrl + F5
 
 # Proje ayağa kalktıktan sonra
 
-Swagger üzerinden api endpointlerine ulaşılabilir. Windows dışındaki ortamlar için .env dosyasındaki parametreyi değiştirip, docker base adresi ile bağlanmanız gerekiyor. Aggregate projesi üzeri giriş noktasıdır. Tüm apiler auth istemektedir. DB olarak sql server kullanılıyor, ilk açılışta ayağa kalkması ve migrationların tamamlanması 1-2dk sürebiliyor.
+Swagger üzerinden api endpointlerine ulaşılabilir. Windows dışındaki ortamlar için .env dosyasındaki parametreyi değiştirip, docker base adresi ile bağlanmanız gerekiyor. Aggregate projesi üzeri giriş noktasıdır. Tüm apiler auth istemektedir. DB olarak sql server kullanılıyor, ilk açılışta ayağa kalkması ve migrationların tamamlanması 1-2dk sürebiliyor. Swaggerda Authorize butonu ile login olunabilir.
 
 http://host.docker.internal:7334/
 
