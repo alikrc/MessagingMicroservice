@@ -29,6 +29,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateway", "ApiGateway", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebBffAggregator", "ApiGateway\WebBffAggregator\WebBffAggregator.csproj", "{26FE39DE-990F-4A9D-8896-FFD4B1F65EE5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ss", "ss", "{510C4ADE-4A81-4640-B9EF-915C488F0A3D}"
+	ProjectSection(SolutionItems) = preProject
+		ss\audit-invalid-login.png = ss\audit-invalid-login.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +76,7 @@ Global
 		{9C049236-68AB-40A7-85E4-CB9367A10279} = {0E49D713-5167-4927-99E1-D8E61FA79ADA}
 		{559BB2C9-6F5D-4A89-9649-C77733174BC4} = {AE2A7DBF-56DD-4AEC-81E5-3DFEB2FDD2DA}
 		{26FE39DE-990F-4A9D-8896-FFD4B1F65EE5} = {1001F9F2-381F-48DD-9BB2-9C3E2B99ED0A}
+		{510C4ADE-4A81-4640-B9EF-915C488F0A3D} = {BAD4D7D6-1DF9-477C-9701-DC9C8ADE9348}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {053872E6-1554-4E43-983B-C326FFD1025A}

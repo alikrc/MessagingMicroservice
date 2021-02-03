@@ -12,7 +12,7 @@ services:
 
   identity-api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - MessagingApiClient=http://${EXTERNAL_DNS_NAME_OR_IP}:6100
       - WebBffAggregatorApiClient=http://${EXTERNAL_DNS_NAME_OR_IP}:7334
       - ConnectionString=Server=sqldata;Database=IdentityDb;User Id=sa;Password=Pass@word
@@ -21,7 +21,7 @@ services:
 
   messaging.api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - IdentityUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:6105
       - PATH_BASE=/messaging-api
       - ConnectionString=Server=sqldata;Database=MessagingDb;User Id=sa;Password=Pass@word
@@ -30,7 +30,7 @@ services:
 
   webbffaggregator:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - IdentityUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:6105
       - MessagingApiUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:6100
       - PATH_BASE=/webbffaggregator
