@@ -28,10 +28,6 @@ namespace WebBffAggregator.Services
 
             var responseString = await _httpClient.GetStringAsync(uri);
 
-            //not worked in global settings
-            //var option = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
-            //var internalResponse = JsonSerializer.Deserialize<PaginatedItemsApiModel<MessageInternalApiModel>>(responseString, option);
-
             //changed to newtonsoft
             var internalResponse = JsonConvert.DeserializeObject<PaginatedItemsApiModel<MessageInternalApiModel>>(responseString);
 
@@ -60,7 +56,7 @@ namespace WebBffAggregator.Services
         {
             var uri = UrlsConfig.Messaging.SendMessage(_remoteServiceBaseUrl);
 
-            var content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
+            var content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PostAsync(uri, content);
 
