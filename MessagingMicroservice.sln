@@ -32,6 +32,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ss", "ss", "{510C4ADE-4A81-4640-B9EF-915C488F0A3D}"
 	ProjectSection(SolutionItems) = preProject
 		ss\audit-invalid-login.png = ss\audit-invalid-login.png
+		ss\ss2.png = ss\ss2.png
 	EndProjectSection
 EndProject
 Global
