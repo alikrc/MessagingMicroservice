@@ -31,7 +31,7 @@ namespace Messaging.API.Controllers
         [Route(nameof(GetMessages))]
         [ProducesResponseType(typeof(PaginatedItemsApiModel<MessageApiModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<MessageApiModel>> GetMessages([FromQuery] Guid? userId = null, [FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0)
+        public async Task<ActionResult> GetMessages([FromQuery] Guid? userId = null, [FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0)
         {
             //Since messaging service will be internal use in production, i didn't put any permission logic here to make it generic
 
