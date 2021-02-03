@@ -8,6 +8,9 @@ namespace WebBffAggregator.Filters
 {
     public class AuthorizeCheckOperationFilter : IOperationFilter
     {
+        /// <summary>
+        /// This method intercepts auth controllers and adds auth scheme for swagger
+        /// </summary>
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             // Check for authorize attribute

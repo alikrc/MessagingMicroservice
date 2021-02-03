@@ -6,14 +6,19 @@ namespace WebBffAggregator.Config
     {
         internal static class Messaging
         {
-            internal static string GetMyMessages(string baseUri, int take, int page)
+            internal static string GetMessages(string baseUri, Guid userId, int take, int page)
             {
-                return $"{baseUri}getMyMessages?pageSize={take}&pageIndex={page}";
+                return $"{baseUri}GetMessages?userId={userId.ToString("N")}&pageSize={take}&pageIndex={page}";
             }
 
             internal static string BlockUser(string baseUri, Guid userIdtoBlock)
             {
-                return $"{baseUri}BlockUser?userIdtoBlock={userIdtoBlock}";
+                return $"{baseUri}BlockUser?userIdtoBlock={userIdtoBlock.ToString("N")}";
+            }
+
+            internal static string SendMessage(string baseUri)
+            {
+                return $"{baseUri}SendMessage";
             }
         }
 

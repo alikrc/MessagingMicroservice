@@ -5,8 +5,8 @@ namespace WebBffAggregator.Services
 {
     public interface IIdentityService
     {
-        Guid GetUserId();
+        Guid GetCurrentUserId();
         string GetUserName();
-        Task<Guid?> GetUserIdByUsername(string username);
+        Task<Guid> GetUserIdByUsername(string username);
     }
 }

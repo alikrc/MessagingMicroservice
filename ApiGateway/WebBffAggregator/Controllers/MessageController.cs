@@ -4,7 +4,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using WebBffAggregator.Models;
+using WebBffAggregator.ApiModels;
+using WebBffAggregator.InternalApiModels;
 using WebBffAggregator.Services;
 
 namespace WebBffAggregator.Controllers
@@ -27,13 +28,19 @@ namespace WebBffAggregator.Controllers
 
         [HttpGet]
         [Route(nameof(GetMyMessages))]
-        [ProducesResponseType(typeof(PaginatedItemsApiModel<MessageApiModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(PaginatedItemsApiModel<GetMyMessagesApiModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<MessageApiModel>> GetMyMessages([FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0)
+        public async Task<ActionResult<MessageInternalApiModel>> GetMyMessages([FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0)
         {
-            var userId = _identityService.GetUserId();
+            pageSize = pageSize <= 0 ? 10 : pageSize;
 
-            var messages = await _messagingService.GetMyMessages(userId, pageIndex, pageSize);
+            pageSize = pageSize > 250 ? 250 : pageSize;
+
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            
+            var loggedUserId = _identityService.GetCurrentUserId();
+
+            var messages = await _messagingService.GetMessages(loggedUserId, pageIndex, pageSize);
 
             return Ok(messages);
         }
@@ -46,17 +53,45 @@ namespace WebBffAggregator.Controllers
         {
             if (string.IsNullOrEmpty(userNameToBlock))
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("Username is null or empty");
             }
             var userIdtoBlock = await _identityService.GetUserIdByUsername(userNameToBlock);
             if (userIdtoBlock == null)
             {
-                throw new ArgumentNullException();
+                return NotFound("User not found");
             }
 
-            await _messagingService.BlockUser(userIdtoBlock.Value);
+            await _messagingService.BlockUser(userIdtoBlock);
 
             return Ok();
         }
+
+        [HttpPost]
+        [Route(nameof(SendMessage))]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult> SendMessage(SendMessageApiModel apiModel)
+        {
+            if (string.IsNullOrEmpty(apiModel.UsernameToSend))
+            {
+                return BadRequest("UsernameToSend is null or empty");
+            }
+            if (string.IsNullOrEmpty(apiModel.MessageText))
+            {
+                return BadRequest("MessageText is null or empty");
+            }
+            var userIdtoSend = await _identityService.GetUserIdByUsername(apiModel.UsernameToSend);
+            if (userIdtoSend == Guid.Empty)
+            {
+                return NotFound("User not found");
+            }
+
+            var sendMessageModel = new SendMessageInternalApiModel(_identityService.GetCurrentUserId(), userIdtoSend, apiModel.MessageText);
+
+            await _messagingService.SendMessage(sendMessageModel);
+
+            return Ok();
+        }
+
     }
 }

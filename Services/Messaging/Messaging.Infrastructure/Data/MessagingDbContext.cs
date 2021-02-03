@@ -52,6 +52,7 @@ namespace Messaging.Infrastructure.Data
                 entity.Property(b => b.BlockedUserId)
                     .IsRequired();
 
+                //setting fk to user also self validating if user exists
                 entity.HasOne(w => w.BlockingUser)
                     .WithMany(w => w.UsersBlockedByUser)
                     .HasForeignKey(w => w.BlockingUserId)
@@ -61,7 +62,6 @@ namespace Messaging.Infrastructure.Data
                     .WithMany(w => w.UsersBlockUser)
                     .HasForeignKey(w => w.BlockedUserId)
                     .OnDelete(DeleteBehavior.Restrict);
-
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -115,7 +115,7 @@ namespace Messaging.Infrastructure.Data
                 }
             }
         }
-
+        
         public void RollbackTransaction()
         {
             try

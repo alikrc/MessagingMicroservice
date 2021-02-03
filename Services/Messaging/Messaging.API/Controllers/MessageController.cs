@@ -28,14 +28,20 @@ namespace Messaging.API.Controllers
         }
 
         [HttpGet]
-        [Route(nameof(GetMyMessages))]
+        [Route(nameof(GetMessages))]
         [ProducesResponseType(typeof(PaginatedItemsApiModel<MessageApiModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<MessageApiModel>> GetMyMessages([FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0)
+        public async Task<ActionResult<MessageApiModel>> GetMessages([FromQuery] Guid? userId = null, [FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0)
         {
-            var userId = _identityService.GetUserId();
+            //Since messaging service will be internal use in production, i didn't put any permission logic here to make it generic
 
-            var messages = await _messagingService.GetMyMessages(userId, pageIndex, pageSize);
+            userId = (userId != null && userId != Guid.Empty) ? userId : _identityService.GetUserId();
+            if (userId == null || userId == Guid.Empty)
+            {
+                return BadRequest("UserId is null or empty");
+            }
+
+            var messages = await _messagingService.GetMyMessages(userId.Value, pageIndex, pageSize);
 
             return Ok(messages);
         }
@@ -46,6 +52,11 @@ namespace Messaging.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult> BlockUser([FromQuery] Guid userIdtoBlock)
         {
+            if (userIdtoBlock == Guid.Empty)
+            {
+                NotFound();
+            }
+
             await _userService.BlockUser(_identityService.GetUserId(), userIdtoBlock);
 
             return Ok();
@@ -55,15 +66,11 @@ namespace Messaging.API.Controllers
         [Route(nameof(SendMessage))]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult> SendMessage([FromBody] CreateMessageApiModel createMessageApiModel)
+        public async Task<ActionResult> SendMessage([FromBody] SendMessageApiModel createMessageApiModel)
         {
-            //TODO
-            //var receiverId =messageApiModel.rece
+            await _messagingService.SendMessage(createMessageApiModel);
 
-            var receiverId = Guid.Empty;
-            var id = await _messagingService.CreateMessage(_identityService.GetUserId(), receiverId, createMessageApiModel.MessageText);
-
-            return CreatedAtAction(nameof(GetMyMessages), new { id = id }, null);
+            return Ok();
         }
     }
 }

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Messaging.API.Migrations
 {
     [DbContext(typeof(MessagingDbContext))]
-    [Migration("20210202030334_InitialCreate")]
+    [Migration("20210203005404_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

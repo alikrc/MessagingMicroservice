@@ -29,6 +29,16 @@ namespace Messaging.API.Services
         public async Task<bool> BlockUser(Guid blockingUserId, Guid userIdtoBlock)
         {
             var blockedPeople = new BlockedPeople(blockingUserId, userIdtoBlock);
+
+            //check if already blocked
+            var isAlreadyExists = await _userRepository.AnyAsync(w
+                => w.UsersBlockedByUser.Any(x
+                => x.BlockingUserId == blockingUserId && x.BlockedUserId == userIdtoBlock));
+            if (isAlreadyExists)
+            {
+                return true;
+            }
+
             var blockingUser = await _userRepository.GetByIdAsync(blockingUserId);
             if (blockingUser == null)
             {
@@ -39,12 +49,12 @@ namespace Messaging.API.Services
                 await _userRepository.UnitOfWork.CommitAsync();
             }
 
-            var isuserToBeBlockedExists = await _userRepository.AnyAsync(w => w.Id == userIdtoBlock);
-            if (isuserToBeBlockedExists == false)
+            var isBlockedUserExists = await _userRepository.AnyAsync(w => w.Id == userIdtoBlock);
+            if (isBlockedUserExists == false)
             {
-                var userToBeBlocked = new User(userIdtoBlock);
+                var blockedUser = new User(userIdtoBlock);
 
-                await _userRepository.AddAsync(userToBeBlocked);
+                await _userRepository.AddAsync(blockedUser);
 
                 await _userRepository.UnitOfWork.CommitAsync();
             }

@@ -20,26 +20,7 @@ namespace Messaging.API.Services
             _repository = repository;
             _userService = userService;
         }
-
-        public async Task<int> CreateMessage(Guid senderId, Guid receiverId, string messageText)
-        {
-
-            var isSenderBlocked = await _userService.IsSenderBlockedByReceiver(senderId, receiverId);
-
-            if (isSenderBlocked)
-            {
-                throw new MessagingDomainException("Can't send message, sender is blocked by receiver.");
-            }
-
-            var entity = new Message(senderId, receiverId, messageText);
-
-            await _repository.AddAsync(entity);
-
-            var result = _repository.UnitOfWork.CommitAsync();
-
-            return result.Id;
-        }
-
+        
         public async Task<PaginatedItemsApiModel<MessageApiModel>> GetMyMessages(Guid userId, int pageIndex, int pageSize)
         {
             Expression<Func<Message, bool>> criteria = w => w.ReceiverId == userId || w.SenderId == userId;
@@ -60,6 +41,23 @@ namespace Messaging.API.Services
             });
 
             return new PaginatedItemsApiModel<MessageApiModel>(pageIndex, pageSize, totalItems, messages);
+        }
+
+        public async Task<int> SendMessage(SendMessageApiModel createMessageApiModel)
+        {
+            var isSenderBlocked = await _userService.IsSenderBlockedByReceiver(createMessageApiModel.SenderUserId, createMessageApiModel.ReceiverUserId);
+            if (isSenderBlocked)
+            {
+                throw new MessagingDomainException("Can't send message, sender is blocked by receiver.");
+            }
+
+            var entity = new Message(createMessageApiModel.SenderUserId, createMessageApiModel.ReceiverUserId, createMessageApiModel.MessageText);
+
+            await _repository.AddAsync(entity);
+
+            var result = _repository.UnitOfWork.CommitAsync();
+
+            return result.Id;
         }
     }
 }

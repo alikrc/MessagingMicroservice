@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
-using WebBffAggregator.Models;
+using WebBffAggregator.ApiModels;
+using WebBffAggregator.InternalApiModels;
 
 namespace WebBffAggregator.Services
 {
     public interface IMessagingService
     {
-        Task<int> CreateMessage(Guid senderId, Guid receiverId, string messageText);
-        Task<PaginatedItemsApiModel<MessageApiModel>> GetMyMessages(Guid userId, int pageIndex, int pageSize);
+        Task<PaginatedItemsApiModel<GetMyMessagesApiModel>> GetMessages(Guid userId, int pageIndex, int pageSize);
         Task BlockUser(Guid userIdtoBlock);
+        Task SendMessage(SendMessageInternalApiModel model);
     }
 }

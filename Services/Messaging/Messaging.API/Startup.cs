@@ -12,8 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
@@ -39,7 +37,7 @@ namespace Messaging.API
             services.AddControllers(options =>
             {
                 options.Filters.Add(typeof(HttpGlobalExceptionFilter));
-            }).AddNewtonsoftJson();
+            });
 
             var conStr = Configuration.GetValue<string>("ConnectionString");
 
@@ -47,8 +45,8 @@ namespace Messaging.API
                 options.UseSqlServer(conStr,
                 sqlServerOptionsAction: sqlOptions =>
                 {
+                    //ef core doesn't allow creating migration in another assembly so these created in API project
                     sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
-                    //sqlOptions.MigrationsAssembly("Messaging.Infrastructure");
 
                     //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
                     sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);

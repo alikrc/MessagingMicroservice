@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
@@ -34,6 +33,12 @@ namespace WebBffAggregator
             {
                 options.Filters.Add(typeof(HttpGlobalExceptionFilter));
             }).AddNewtonsoftJson();
+
+            // buggy in .net core 3, use inline option or better Newtonsoft
+            //.AddJsonOptions(options =>
+            //{
+            //    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+            //});
 
             services.Configure<ApiBehaviorOptions>(options =>
             {
@@ -121,7 +126,6 @@ namespace WebBffAggregator
             services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
             services.AddHttpClient<IMessagingService, MessagingService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
             services.AddHttpClient<IIdentityService, IdentityService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

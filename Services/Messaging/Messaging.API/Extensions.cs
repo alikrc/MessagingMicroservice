@@ -49,8 +49,15 @@ namespace Messaging.API
         private static void InvokeSeeder<TContext>(Action<TContext, IServiceProvider> seeder, TContext context, IServiceProvider services)
             where TContext : DbContext
         {
-            context.Database.Migrate();
-            seeder(context, services);
+            try
+            {
+                context.Database.Migrate();
+                seeder(context, services);
+            }
+            catch (Exception)
+            {
+                //sql server need more time to set up try again, no need to catch exception
+            }
         }
     }
 }
