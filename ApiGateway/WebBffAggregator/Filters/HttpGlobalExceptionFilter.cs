@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
+using System.Net.Http;
 
 namespace WebBffAggregator.Filters
 {
@@ -39,6 +40,23 @@ namespace WebBffAggregator.Filters
 
                 context.Result = new BadRequestObjectResult(problemDetails);
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            }
+            else if (context.Exception.GetType() == typeof(SimpleHttpResponseException))
+            {
+                var statusCode = ((SimpleHttpResponseException)context.Exception).StatusCode;
+
+                var problemDetails = new ValidationProblemDetails()
+                {
+                    Instance = context.HttpContext.Request.Path,
+                    Status = (int)statusCode,
+                    Detail = "Please refer to the errors property for additional details."
+                };
+
+                problemDetails.Errors.Add(nameof(ArgumentNullException), new string[] { context.Exception.Message.ToString() });
+
+                context.Result = new BadRequestObjectResult(problemDetails);
+                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+
             }
             else
             {

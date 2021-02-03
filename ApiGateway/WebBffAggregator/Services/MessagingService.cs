@@ -26,7 +26,11 @@ namespace WebBffAggregator.Services
         {
             var uri = UrlsConfig.Messaging.GetMessages(_remoteServiceBaseUrl, userId, pageSize, pageIndex);
 
-            var responseString = await _httpClient.GetStringAsync(uri);
+            var innerResponse = await _httpClient.GetAsync(uri);
+
+            await innerResponse.EnsureSuccessStatusCodeCustom();
+
+            var responseString = await innerResponse.Content.ReadAsStringAsync();
 
             //changed to newtonsoft
             var internalResponse = JsonConvert.DeserializeObject<PaginatedItemsApiModel<MessageInternalApiModel>>(responseString);
@@ -48,8 +52,7 @@ namespace WebBffAggregator.Services
 
             var response = await _httpClient.PostAsync(uri, null);
 
-            response.EnsureSuccessStatusCode();
-
+            await response.EnsureSuccessStatusCodeCustom();
         }
 
         public async Task SendMessage(SendMessageInternalApiModel model)
@@ -60,7 +63,7 @@ namespace WebBffAggregator.Services
 
             var response = await _httpClient.PostAsync(uri, content);
 
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessStatusCodeCustom();
         }
 
     }
