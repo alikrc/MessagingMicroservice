@@ -1,6 +1,8 @@
 # Nasıl çalıştırılır?
 
-Terminal: docker-compose
+Terminal: 
+docker-compose build
+docker-compose up
 
 Visual Studio: Ctrl + F5
 
