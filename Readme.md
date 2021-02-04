@@ -1,10 +1,15 @@
 # Nasıl çalıştırılır?
 
-Terminal: 
+### Terminal
+
 docker-compose build
+
 docker-compose up
 
-Visual Studio: Ctrl + F5
+
+###  Visual Studio
+
+Ctrl + F5
 
 # Proje ayağa kalktıktan sonra
 
