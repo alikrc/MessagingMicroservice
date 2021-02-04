@@ -11,8 +11,8 @@ namespace Messaging.Core.Interfaces
     {
         Task<TEntity> GetByIdAsync(int id, CancellationToken cancellationToken = default);
         Task<TEntity> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-        Task<IReadOnlyList<TEntity>> ListAllAsync(CancellationToken cancellationToken = default);
-        Task<IReadOnlyList<TEntity>> ListAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default);
+        Task<List<TEntity>> ListAllAsync(CancellationToken cancellationToken = default);
+        Task<List<TEntity>> ListAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default);
         Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
         Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
         Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);

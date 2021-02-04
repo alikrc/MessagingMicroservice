@@ -9,5 +9,11 @@ namespace Messaging.API.ApiModels
         public Guid SenderUserId { get; set; }
         public Guid ReceiverUserId { get; set; }
         public string MessageText { get; set; }
+        public SendMessageApiModel(Guid senderUserId, Guid receiverUserId, string messageText)
+        {
+            SenderUserId = senderUserId;
+            ReceiverUserId = receiverUserId;
+            MessageText = messageText;
+        }
     }
 }

@@ -32,7 +32,7 @@ namespace Messaging.UnitTests
         }
 
         [Fact]
-        public async Task Get_messages_success()
+        public async Task GetMessages_success()
         {
             //Act
             var fakeUserId = Guid.NewGuid();
@@ -42,7 +42,7 @@ namespace Messaging.UnitTests
 
             var fakeMessageApiModel = new PaginatedItemsApiModel<MessageApiModel>(fakePageIndex, fakePageSize, fakeCount, new List<MessageApiModel>());
 
-            _messagingServiceMock.Setup(w => w.GetMyMessages(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>()))
+            _messagingServiceMock.Setup(w => w.GetMessages(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.FromResult(fakeMessageApiModel));
 
             //Arrenge
@@ -54,5 +54,39 @@ namespace Messaging.UnitTests
             Assert.Equal((actionResult.Value as PaginatedItemsApiModel<MessageApiModel>), fakeMessageApiModel);
         }
 
+        [Fact]
+        public async Task BlockUser_success()
+        {
+            //Act
+            var fakeUserId = Guid.NewGuid();
+
+            _userServiceMock.Setup(w => w.BlockUser(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult(true));
+
+            //Arrenge
+            var controller = CreateDefaultController();
+            var actionResult = await controller.BlockUser(fakeUserId) as OkResult;
+
+            //Assert
+            Assert.Equal(actionResult.StatusCode, (int)System.Net.HttpStatusCode.OK);
+        }
+
+
+        [Fact]
+        public async Task SendMessage_success()
+        {
+            //Act
+            var fakeSenderUserId = Guid.NewGuid();
+            var fakeRecevierId = Guid.NewGuid();
+            var fakeMessageText = "hello";
+            var fakeModel = new SendMessageApiModel(fakeSenderUserId, fakeRecevierId, fakeMessageText);
+            _messagingServiceMock.Setup(w => w.SendMessage(fakeModel)).Returns(Task.FromResult(true));
+
+            //Arrenge
+            var controller = CreateDefaultController();
+            var actionResult = await controller.SendMessage(fakeModel) as OkResult;
+
+            //Assert
+            Assert.Equal(actionResult.StatusCode, (int)System.Net.HttpStatusCode.OK);
+        }
     }
 }

@@ -35,12 +35,12 @@ namespace Messaging.Infrastructure.Data.Repositories
             return await _dbSet.FindAsync(keyValues, cancellationToken);
         }
 
-        public async Task<IReadOnlyList<TEntity>> ListAllAsync(CancellationToken cancellationToken = default)
+        public async Task<List<TEntity>> ListAllAsync(CancellationToken cancellationToken = default)
         {
             return await _dbSet.ToListAsync(cancellationToken);
         }
 
-        public async Task<IReadOnlyList<TEntity>> ListAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default)
+        public async Task<List<TEntity>> ListAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default)
         {
             return await ApplySpecification(spec).ToListAsync(cancellationToken);
         }

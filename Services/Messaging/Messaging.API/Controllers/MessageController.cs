@@ -41,7 +41,7 @@ namespace Messaging.API.Controllers
                 return BadRequest("UserId is null or empty");
             }
 
-            var messages = await _messagingService.GetMyMessages(userId.Value, pageIndex, pageSize);
+            var messages = await _messagingService.GetMessages(userId.Value, pageIndex, pageSize);
 
             return Ok(messages);
         }

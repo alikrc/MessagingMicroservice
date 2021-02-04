@@ -2,7 +2,7 @@ dotnet test --collect:"XPlat Code Coverage" --no-restore
 
 
 #need to replace guid here to generate real report
-reportgenerator "-reports:\TestResults\{guid}\coverage.cobertura.xml" "-targetdir:coveragereport" -reporttypes:Html
+#reportgenerator "-reports:\TestResults\{guid}\coverage.cobertura.xml" "-targetdir:coveragereport" -reporttypes:Html
 
 
 # run this command for first time to install reporting tool

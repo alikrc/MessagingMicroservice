@@ -6,7 +6,7 @@ namespace Messaging.API.Services
 {
     public interface IMessagingService
     {
-        Task<PaginatedItemsApiModel<MessageApiModel>> GetMyMessages(Guid userId, int pageIndex, int pageSize);
-        Task<int> SendMessage(SendMessageApiModel createMessageApiModel);
+        Task<PaginatedItemsApiModel<MessageApiModel>> GetMessages(Guid userId, int pageIndex, int pageSize);
+        Task<bool> SendMessage(SendMessageApiModel createMessageApiModel);
     }
 }
