@@ -36,6 +36,7 @@ namespace Messaging.API.Controllers
             //Since messaging service will be internal use in production, i didn't put any permission logic here to make it generic
 
             userId = (userId != null && userId != Guid.Empty) ? userId : _identityService.GetUserId();
+
             if (userId == null || userId == Guid.Empty)
             {
                 return BadRequest("UserId is null or empty");
@@ -68,6 +69,17 @@ namespace Messaging.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult> SendMessage([FromBody] SendMessageApiModel createMessageApiModel)
         {
+            if (createMessageApiModel.SenderUserId == Guid.Empty
+                || createMessageApiModel.ReceiverUserId == Guid.Empty)
+            {
+                NotFound();
+            }
+
+            if (createMessageApiModel.SenderUserId == createMessageApiModel.ReceiverUserId)
+            {
+                return BadRequest("User and Receiver can't be same");
+            }
+
             await _messagingService.SendMessage(createMessageApiModel);
 
             return Ok();
